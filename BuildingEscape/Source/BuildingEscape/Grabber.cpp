@@ -2,7 +2,9 @@
 
 #include "Grabber.h"
 #include "Components/ActorComponent.h"
+#include "Components/InputComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Engine/World.h"
 #include "DrawDebugHelpers.h"
 
@@ -25,9 +27,41 @@ void UGrabber::BeginPlay()
 	Super::BeginPlay();
 
 	UE_LOG(LogTemp, Warning, TEXT("Grabber reporting for duty!"));
+
+	/// Look for attached physics handle:
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (PhysicsHandle) {
+		// Physics handle found
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Physics Handle for %s not found"),*GetOwner()->GetName());
+	}
+
+	/// Look for input component:
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (InputComponent) {
+		UE_LOG(LogTemp, Warning, TEXT("Input component(%s) found"), *GetOwner()->GetName());
+		/// Bind the input axis
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Input component(%s) not found"), *GetOwner()->GetName());
+	}
 	
 }
 
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grab Pressed!"));
+}
+
+void UGrabber::Release()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Grab Released!"));
+}
 
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -80,6 +114,6 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		UE_LOG(LogTemp, Warning, TEXT("Line trace hit: %s!!"), *CollisionObject)
 	}
 	
-
+	
 }
 
