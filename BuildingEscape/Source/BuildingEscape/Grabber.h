@@ -37,5 +37,14 @@ private:
 	
 	// Release what's grabbed:
 	void Release();
+
+	// Finding physics handle component
+	void FindPhysicsHandleComponent();
+
+	// Setup attached input component
+	void SetupInputComponent();
+
+	// Return hit for first physics body in reach
+	FHitResult GetFirstPhysicsBodyInReach() const;
 	
 };
