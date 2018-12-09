@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Engine/World.h"
+#include "Components/PrimitiveComponent.h"
 #include "DrawDebugHelpers.h"
 
 #define OUT
@@ -17,7 +18,7 @@ UGrabber::UGrabber()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
+	
 }
 
 
@@ -36,6 +37,24 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	GetFirstPhysicsBodyInReach();
+
+	// Get the player viewpoint this tick
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation
+	);
+
+	FVector LineTraceEnd = PlayerViewPointLocation + (PlayerViewPointRotation.Vector() * Reach);
+	
+	// if the physics handle is attached
+	if (PhysicsHandle->GetGrabbedComponent())
+	{
+		// move the object
+		PhysicsHandle->SetTargetLocation(LineTraceEnd);
+	}
+		
 
 }
 
@@ -71,17 +90,33 @@ FHitResult UGrabber::GetFirstPhysicsBodyInReach() const
 		FString CollisionObject = ActorHit->GetName();
 		UE_LOG(LogTemp, Warning, TEXT("Line trace hit: %s!!"), *CollisionObject)
 	}
-	return FHitResult();
+	return Hit;
 }
 void UGrabber::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab Pressed!"));
-	//GetFirstPhysicsBodyInReach();
+	
+	// LINE TRACE and see if we reach any actors with physics body collision channel set
+	auto HitResult = GetFirstPhysicsBodyInReach();
+	auto ComponentToGrab = HitResult.GetComponent();
+	auto ActorHit = HitResult.GetActor();
+
+	// if we hit something then attach a physics handle
+	if (ActorHit != nullptr)
+	{
+		PhysicsHandle->GrabComponentAtLocationWithRotation(
+			ComponentToGrab,
+			NAME_None,
+			ComponentToGrab->GetOwner()->GetActorLocation(),
+			FRotator(0.0f, 0.0f, 0.0f)
+		);
+	}
 }
 
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab Released!"));
+	PhysicsHandle->ReleaseComponent();
 }
 
 /// Look for attached physics handle:
