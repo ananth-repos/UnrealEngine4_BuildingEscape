@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Get the postion of the actor.
 
 #include "PositionReport.h"
 #include "GameFramework/Actor.h"
@@ -10,9 +10,6 @@ UPositionReport::UPositionReport()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	
-	// ...
 }
 
 
@@ -24,8 +21,8 @@ void UPositionReport::BeginPlay()
 	FString ObjectName = GetOwner()->GetName();
 	FString ObjectPos = GetOwner()->GetTransform().GetLocation().ToString();
 
+	// Display location of the actor as a warning
 	UE_LOG(LogTemp, Warning, TEXT("%s is at %s"), *ObjectName, *ObjectPos);
-	// ...
 	
 }
 
@@ -35,6 +32,5 @@ void UPositionReport::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
 }
 

@@ -1,4 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Description:
+// 1. Grabber handles to pick/move/drop the objects within the building.
+// 2. Ray is casted from the default pawn actor.
+// 3. When the ray hit the object, actor can pick up using pre-defined control (Grab method).
+// 4. Grab is defined using unreal physics handle.
+// 5. Grabbed component is released using the Release method.
+
+// TODO needs refactoring
 
 #pragma once
 
@@ -29,8 +36,11 @@ public:
 private:
 	float Reach = 200.0f; // Look ahead distane from the player
 
+	// Define physics handle used to grab the object
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
-	UInputComponent* InputComponent = nullptr;
+
+	// Component to which the physics handle is attached
+	UInputComponent* InputComponent = nullptr; // TODO pointer protection
 
 	// Ray-cast & grab what is in reach:
 	void Grab();

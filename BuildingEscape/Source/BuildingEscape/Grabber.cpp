@@ -1,4 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Implementation for methods defined in Grabber.h
+
+// TODO refactoring
 
 #include "Grabber.h"
 #include "Components/ActorComponent.h"
@@ -17,19 +19,19 @@ UGrabber::UGrabber()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
 	
 }
-
 
 // Called when the game starts
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Look for attached physics handle:
 	FindPhysicsHandleComponent();
-	SetupInputComponent();
-	
-	
+
+	// Look for input component:
+	SetupInputComponent();		
 }
 
 // Called every frame
@@ -125,7 +127,7 @@ void UGrabber::Release()
 	PhysicsHandle->ReleaseComponent();
 }
 
-/// Look for attached physics handle:
+// Look for attached physics handle:
 void UGrabber::FindPhysicsHandleComponent()
 {
 
@@ -140,7 +142,7 @@ void UGrabber::FindPhysicsHandleComponent()
 	}
 }
 
-/// Look for input component:
+// Look for input component:
 void UGrabber::SetupInputComponent()
 {
 	

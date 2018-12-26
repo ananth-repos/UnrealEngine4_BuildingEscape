@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Implementation for methods defined in OpenDoor.h
 
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
@@ -7,6 +7,7 @@
 #include "Components/PrimitiveComponent.h"
 
 
+// To mark output variables from methods
 #define OUT
 
 // Sets default values for this component's properties
@@ -16,7 +17,6 @@ UOpenDoor::UOpenDoor()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -33,29 +33,36 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// Poll the Trigger Volume every frame
+	// Check mass on the pressure plate against TriggerMass
 	if (GetTotalMassOfActorsOnPlate() > TriggerMass)
 	{
-		// If the ActorThatOpens is in the volume
+		// Opens door
 		OnOpenRequest.Broadcast();
 	}
 	else
 	{
+		// Closes door
 		OnCloseRequest.Broadcast();
 	}
 	
 }
 
+// Returns total mass on the pressure plate
 float UOpenDoor::GetTotalMassOfActorsOnPlate()
 {
-	float TotalMass = 0.f;
+	float TotalMass = 0.f; // Initialize
 
 	// Find all overlapping actors
 	TArray<AActor*> OverlappingActors;
 	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
+
 	// Iterate through them adding their masses
 	for (const auto* Actor : OverlappingActors) {
+		
+		// Display which object is on teh pressure plate
 		UE_LOG(LogTemp, Warning, TEXT("%s on Pressure Plate!"), *Actor->GetName());
+
+		// Add total mass
 		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
 	}
 	return TotalMass;
