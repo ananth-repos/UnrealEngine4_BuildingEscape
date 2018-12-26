@@ -10,6 +10,7 @@
 
 
 
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BUILDINGESCAPE_API UOpenDoor : public UActorComponent
 {
@@ -43,9 +44,11 @@ private:
 
 private:
 	//UPROPERTY(EditAnywhere)
-	AActor* ActorThatOpens; // Remember pawn inherits from actor
 	AActor* Owner; // The owning door
 	float LastDoorOpenTime;
 	//float CurrentTime;
+
+	// Returns total mass in kg
+	float GetTotalMassOfActorsOnPlate();
 	
 };
