@@ -5,7 +5,6 @@
 // 4. Grab is defined using unreal physics handle.
 // 5. Grabbed component is released using the Release method.
 
-// TODO needs refactoring
 
 #pragma once
 
@@ -53,6 +52,8 @@ private:
 
 	// Setup attached input component
 	void SetupInputComponent();
+
+	FTwoVectors GetLineTracePoints() const;
 
 	// Return hit for first physics body in reach
 	FHitResult GetFirstPhysicsBodyInReach() const;
